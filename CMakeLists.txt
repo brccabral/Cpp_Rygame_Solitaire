@@ -5,8 +5,10 @@ if (NOT TARGET rygame)
     find_package(rygame REQUIRED)
 endif ()
 
-add_executable(${PROJECT_NAME}
-               code/main.cpp
-               code/game.cpp
-)
+add_executable(
+    ${PROJECT_NAME}
+    code/main.cpp
+    code/game.cpp
+    code/card.cpp
+    code/resourcemanager.cpp)
 target_link_libraries(${PROJECT_NAME} PRIVATE rygame)
