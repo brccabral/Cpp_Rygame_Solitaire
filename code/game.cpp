@@ -22,7 +22,7 @@ void Game::run()
 {
     while (!rg::WindowCloseOrQuit())
     {
-        screen->Fill(bg_color);
+        display.Fill(bg_color);
         cards_group.Draw(&display);
         screen->Blit(&display, rg::math::Vector2{}, rl::BLEND_ALPHA, 0.6f);
         rg::display::Update();
