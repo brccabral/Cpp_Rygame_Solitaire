@@ -17,7 +17,8 @@ private:
     void LoadCards();
     void Reset();
 
-    rg::Surface *display;
+    rg::Surface *screen{};
+    rg::Surface display{};
     rl::Color bg_color = rl::Color{59, 122, 87, 255};
 
     std::vector<Card> cards{};

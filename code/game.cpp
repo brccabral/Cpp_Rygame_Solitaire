@@ -5,7 +5,8 @@
 Game::Game()
 {
     rg::Init();
-    display = &rg::display::SetMode(1024, 768);
+    screen = &rg::display::SetMode(1024, 768);
+    display = rg::Surface(1706, 1280);
     rg::display::SetCaption("Solitaire");
     LoadCards();
     Reset();
@@ -21,8 +22,9 @@ void Game::run()
 {
     while (!rg::WindowCloseOrQuit())
     {
-        display->Fill(bg_color);
-        cards_group.Draw(display);
+        screen->Fill(bg_color);
+        cards_group.Draw(&display);
+        screen->Blit(&display, rg::math::Vector2{}, rl::BLEND_ALPHA, 0.6f);
         rg::display::Update();
     }
 }
