@@ -32,7 +32,7 @@
 #define TOP_PILE_2 0
 #define TOP_PILE_3 1
 #define TOP_PILE_4 2
-
+#define FACE_DOWN_FILENAME "resources/cards/cardBack_red2.png"
 
 class Game
 {
@@ -53,6 +53,7 @@ private:
     rl::Color bg_color = rl::Color{59, 122, 87, 255};
     rl::Color mat_color = rl::Color{85, 107, 47, 255};
 
+    rg::Surface *face_down{};
     std::vector<Card> cards{};
     rg::sprite::Group cards_group{};
     rg::sprite::Group held_cards{};

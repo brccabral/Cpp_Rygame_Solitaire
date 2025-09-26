@@ -6,11 +6,14 @@ class Card : public rg::sprite::Sprite
 {
 public:
 
-    Card(const std::string &suit, const std::string &value);
+    Card(const std::string &suit, const std::string &value, rg::Surface *face_down);
+    std::string suit{};
+    std::string value{};
 
 private:
 
-    std::string suit{};
-    std::string value{};
     std::string filename{};
+    bool isFaceUp{};
+    rg::Surface *face_down{};
+    rg::Surface *face_up{};
 };

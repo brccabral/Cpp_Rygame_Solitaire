@@ -39,8 +39,8 @@ void Game::run()
 
 void Game::LoadCards()
 {
-    cards.reserve(53);
-    cards.emplace_back("Back_", "red2");
+    face_down = &ResourceManager::GetInstance().GetSurface(FACE_DOWN_FILENAME);
+    cards.reserve(52);
     std::array<std::string, 4> suits = {"Clubs", "Diamonds", "Hearts", "Spades"};
     std::array<std::string, 13> values = {"2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q",
                                           "K", "A"};
@@ -48,7 +48,7 @@ void Game::LoadCards()
     {
         for (auto &value: values)
         {
-            cards.emplace_back(suit, value);
+            cards.emplace_back(suit, value, face_down);
         }
     }
 
@@ -70,22 +70,12 @@ void Game::Reset()
     held_cards.empty();
     held_cards_original_pos.clear();
 
-    int n_cols = 8;
-    int n_rows = 7;
-
-    for (int r = 0; r < n_rows; r++)
+    for (auto &card: cards)
     {
-        for (int c = 0; c < n_cols; ++c)
-        {
-            const int index = r * n_cols + c;
-            if (index > cards.size() - 1)
-            {
-                return;
-            }
-            Card &card = cards[index];
-            card.rect = {140.0f * c, 190.0f * r, 140.0f, 190.0f};
-            card.add(&cards_group);
-        }
+        card.rect = {START_X, BOTTOM_Y, CARD_WIDTH, CARD_HEIGHT};
+        card.add(&cards_group);
     }
+
+    std::ranges::shuffle(cards, *rg::math::get_rng());
 }
 
