@@ -29,10 +29,13 @@
 #define PLAY_PILE_6 7
 #define PLAY_PILE_7 8
 #define TOP_PILE_1 9
-#define TOP_PILE_2 0
-#define TOP_PILE_3 1
-#define TOP_PILE_4 2
+#define TOP_PILE_2 10
+#define TOP_PILE_3 11
+#define TOP_PILE_4 12
 #define FACE_DOWN_FILENAME "resources/cards/cardBack_red2.png"
+#define PILE_COUNT 13
+
+typedef int PileIndex;
 
 class Game
 {
@@ -47,6 +50,7 @@ private:
 
     void LoadCards();
     void Reset();
+    void PullToTop(Card *card);
 
     rg::Surface *screen{};
     rg::Surface display{};
@@ -55,8 +59,9 @@ private:
 
     rg::Surface *face_down{};
     std::vector<Card> cards{};
-    rg::sprite::Group cards_group{};
-    rg::sprite::Group held_cards{};
+    rg::sprite::OrderedUpdates card_list{};
+    rg::sprite::OrderedUpdates held_cards{};
     std::vector<rg::Rect> held_cards_original_pos{};
     std::vector<rg::Rect> pile_mat_list{};
+    std::unordered_map<PileIndex, rg::sprite::OrderedUpdates> piles{};
 };

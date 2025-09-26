@@ -30,7 +30,7 @@ void Game::run()
             rg::draw::rect(&display, mat_color, mat);
         }
 
-        // cards_group.Draw(&display);
+        card_list.Draw(&display);
 
         screen->Blit(&display, rg::math::Vector2{}, rl::BLEND_ALPHA, CARD_SCALE);
         rg::display::Update();
@@ -69,13 +69,35 @@ void Game::Reset()
 {
     held_cards.empty();
     held_cards_original_pos.clear();
+    piles.clear();
 
     for (auto &card: cards)
     {
         card.rect = {START_X, BOTTOM_Y, CARD_WIDTH, CARD_HEIGHT};
-        card.add(&cards_group);
+        card_list.add(&card);
     }
 
     std::ranges::shuffle(cards, *rg::math::get_rng());
+
+    for (auto &card: cards)
+    {
+        piles[BOTTOM_FACE_DOWN_PILE].add(&card);
+    }
+
+    for (int pile_no = PLAY_PILE_1; pile_no < PLAY_PILE_7 + 1; ++pile_no)
+    {
+        for (int j = 0; j < pile_no - PLAY_PILE_1 + 1; ++j)
+        {
+            auto *card = piles[BOTTOM_FACE_DOWN_PILE].pop();
+            piles[pile_no].add(card);
+            card->rect = pile_mat_list[pile_no];
+        }
+    }
+}
+
+void Game::PullToTop(Card *card)
+{
+    card_list.remove(card);
+    card_list.add(card);
 }
 
