@@ -4,14 +4,14 @@ ResourceManager &ResourceManager::GetInstance()
 {
     if (!instance)
     {
-        instance.reset(new ResourceManager());
+        instance = new ResourceManager();
     }
     return *instance;
 }
 
 void ResourceManager::Destroy()
 {
-    instance.reset();
+    delete instance;
 }
 
 rg::Surface &ResourceManager::GetSurface(const std::string &filename)
@@ -24,3 +24,5 @@ rg::Surface &ResourceManager::GetSurface(const std::string &filename)
     surfaces.emplace(filename, rg::image::Load(filename.c_str()));
     return surfaces.at(filename);
 }
+
+ResourceManager *ResourceManager::instance = nullptr;

@@ -1,7 +1,5 @@
 #pragma once
-#include <memory>
 #include <unordered_map>
-
 #include <rygame.hpp>
 
 
@@ -17,7 +15,8 @@ public:
 private:
 
     ResourceManager() = default;
+    ~ResourceManager() = default;
 
-    inline static std::unique_ptr<ResourceManager> instance;
+    static ResourceManager *instance;
     std::unordered_map<std::string, rg::Surface> surfaces;
 };

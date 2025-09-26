@@ -10,7 +10,7 @@ public:
 
 private:
 
-    std::string suit;
+    std::string suit{};
     std::string value{};
     std::string filename{};
 };

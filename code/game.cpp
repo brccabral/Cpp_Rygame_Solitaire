@@ -15,6 +15,7 @@ Game::Game()
 Game::~Game()
 {
     ResourceManager::Destroy();
+    display.~Surface();
     rg::Quit();
 }
 
@@ -32,7 +33,7 @@ void Game::run()
 void Game::LoadCards()
 {
     cards.reserve(53);
-    cards.push_back({"Back_", "red2"});
+    cards.emplace_back("Back_", "red2");
     std::array<std::string, 4> suits = {"Clubs", "Diamonds", "Hearts", "Spades"};
     std::array<std::string, 13> values = {"2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q",
                                           "K", "A"};
@@ -40,7 +41,7 @@ void Game::LoadCards()
     {
         for (auto &value: values)
         {
-            cards.push_back({suit, value});
+            cards.emplace_back(suit, value);
         }
     }
 }
