@@ -14,3 +14,8 @@ void Card::face_up()
 {
     image = face_up_surf;
 }
+
+void Card::face_down()
+{
+    image = face_down_surf;
+}

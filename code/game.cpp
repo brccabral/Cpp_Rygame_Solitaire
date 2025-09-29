@@ -23,6 +23,10 @@ void Game::run()
 {
     while (!rg::WindowCloseOrQuit())
     {
+        if (rl::IsKeyPressed(rl::KEY_R))
+        {
+            Reset();
+        }
         display.Fill(bg_color);
 
         for (const auto &mat: pile_mat_list)
@@ -69,6 +73,10 @@ void Game::Reset()
 {
     held_cards.empty();
     held_cards_original_pos.clear();
+    for (auto &pile: piles | std::views::values)
+    {
+        pile.empty();
+    }
     piles.clear();
 
     // resets drawing order
@@ -77,6 +85,7 @@ void Game::Reset()
     {
         card.rect = {START_X + MAT_OFFSET, BOTTOM_Y, CARD_WIDTH, CARD_HEIGHT};
         card_list.add(&card);
+        card.face_down();
     }
 
     // shuffles the deck
