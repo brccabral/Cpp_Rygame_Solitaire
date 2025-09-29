@@ -54,6 +54,8 @@ private:
     void Reset();
     void PullToTop(rg::sprite::Sprite *card);
     void OnMousePress(int x, int y);
+    void OnMouseRelease();
+    void OnMouseMotion(float dx, float dy) const;
     PileIndex GetPileForCard(Card *);
 
     rg::Surface *screen{};
@@ -65,7 +67,7 @@ private:
     std::vector<Card> cards{};
     // holds the drawing order (all cards should be here)
     rg::sprite::OrderedUpdates card_list{};
-    rg::sprite::OrderedUpdates held_cards{};
+    std::vector<Card *> held_cards{};
     std::vector<rg::Rect> held_cards_original_pos{};
     std::vector<rg::Rect> pile_mat_list{};
     std::unordered_map<PileIndex, rg::sprite::OrderedUpdates> piles{};

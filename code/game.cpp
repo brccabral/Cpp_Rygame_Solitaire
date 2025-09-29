@@ -32,6 +32,15 @@ void Game::run()
         {
             OnMousePress(rl::GetMouseX() / CARD_SCALE, rl::GetMouseY() / CARD_SCALE);
         }
+        if (rl::IsMouseButtonReleased(rl::MOUSE_BUTTON_LEFT))
+        {
+            OnMouseRelease();
+        }
+        const auto [dx, dy] = rl::GetMouseDelta();
+        if (dx != 0 || dy != 0)
+        {
+            OnMouseMotion(dx, dy);
+        }
 
         display.Fill(bg_color);
 
@@ -77,7 +86,7 @@ void Game::LoadCards()
 
 void Game::Reset()
 {
-    held_cards.empty();
+    held_cards.clear();
     held_cards_original_pos.clear();
     for (auto &pile: piles | std::views::values)
     {
@@ -167,6 +176,44 @@ void Game::OnMousePress(int x, int y)
         {
             primary_card->face_up();
         }
+        else if (primary_card->isFaceUp)
+        {
+            held_cards.emplace_back(primary_card);
+            held_cards_original_pos.emplace_back(primary_card->rect);
+            PullToTop(primary_card);
+
+            auto card_index = piles[pile_index].index(primary_card);
+            for (int i = card_index + 1; i < piles[pile_index].size(); ++i)
+            {
+                auto *card = dynamic_cast<Card *>(piles[pile_index][i]);
+                held_cards.emplace_back(card);
+                held_cards_original_pos.emplace_back(card->rect);
+                PullToTop(card);
+            }
+        }
+    }
+}
+
+void Game::OnMouseRelease()
+{
+    if (held_cards.empty())
+    {
+        return;
+    }
+    for (int h = 0; h < held_cards.size(); ++h)
+    {
+        held_cards[h]->rect = held_cards_original_pos[h];
+    }
+    held_cards.clear();
+    held_cards_original_pos.clear();
+}
+
+void Game::OnMouseMotion(const float dx, const float dy) const
+{
+    for (auto *card: held_cards)
+    {
+        card->rect.x += dx / CARD_SCALE;
+        card->rect.y += dy / CARD_SCALE;
     }
 }
 
