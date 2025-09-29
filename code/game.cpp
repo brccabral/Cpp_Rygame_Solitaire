@@ -127,7 +127,6 @@ void Game::Reset()
         auto *card = dynamic_cast<Card *>(card_sprite);
         card->rect.y += CARD_VERTICAL_OFFSET;
         card->face_up();
-
     }
 
 }
@@ -162,6 +161,11 @@ void Game::OnMousePress(int x, int y)
                 piles[BOTTOM_FACE_UP_PILE].add(card);
                 PullToTop(card);
             }
+        }
+        else if (piles[pile_index].size() == 1 &&
+                 !primary_card->isFaceUp)
+        {
+            primary_card->face_up();
         }
     }
 }

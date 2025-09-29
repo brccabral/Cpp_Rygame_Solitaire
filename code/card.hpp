@@ -11,11 +11,11 @@ public:
     void face_down();
     std::string suit{};
     std::string value{};
+    bool isFaceUp{};
 
 private:
 
     std::string filename{};
-    bool isFaceUp{};
     rg::Surface *face_down_surf{};
     rg::Surface *face_up_surf{};
 };
