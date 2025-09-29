@@ -52,6 +52,8 @@ private:
     void LoadCards();
     void Reset();
     void PullToTop(rg::sprite::Sprite *card);
+    void OnMousePress(int x, int y);
+    PileIndex GetPileForCard(Card *);
 
     rg::Surface *screen{};
     rg::Surface display{};

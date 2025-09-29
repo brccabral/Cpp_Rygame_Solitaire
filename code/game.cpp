@@ -27,6 +27,12 @@ void Game::run()
         {
             Reset();
         }
+
+        if (rl::IsMouseButtonPressed(rl::MOUSE_BUTTON_LEFT))
+        {
+            OnMousePress(rl::GetMouseX() / CARD_SCALE, rl::GetMouseY() / CARD_SCALE);
+        }
+
         display.Fill(bg_color);
 
         for (const auto &mat: pile_mat_list)
@@ -130,5 +136,29 @@ void Game::PullToTop(rg::sprite::Sprite *card)
 {
     card_list.remove(card);
     card_list.add(card);
+}
+
+void Game::OnMousePress(int x, int y)
+{
+    printf("x %d y %d\n", x, y);
+    auto clicked = rg::sprite::pointcollide({x, y}, &card_list, false);
+    if (!clicked.empty())
+    {
+        auto *primary_card = dynamic_cast<Card *>(clicked.back());
+        auto pile_index = GetPileForCard(primary_card);
+        printf("Pile %d\n", pile_index);
+    }
+}
+
+PileIndex Game::GetPileForCard(Card *card)
+{
+    for (auto &[index, pile]: piles)
+    {
+        if (pile.has(card))
+        {
+            return index;
+        }
+    }
+    return -1;
 }
 
