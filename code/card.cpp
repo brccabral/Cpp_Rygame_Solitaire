@@ -13,9 +13,11 @@ Card::Card(const std::string &suit, const std::string &value, rg::Surface *face_
 void Card::face_up()
 {
     image = face_up_surf;
+    isFaceUp = true;
 }
 
 void Card::face_down()
 {
     image = face_down_surf;
+    isFaceUp = false;
 }
