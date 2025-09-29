@@ -35,6 +35,7 @@
 #define TOP_PILE_4 12
 #define FACE_DOWN_FILENAME "resources/cards/cardBack_red2.png"
 #define PILE_COUNT 13
+#define FLIP_CARDS 1
 
 typedef int PileIndex;
 

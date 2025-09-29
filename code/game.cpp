@@ -140,13 +140,29 @@ void Game::PullToTop(rg::sprite::Sprite *card)
 
 void Game::OnMousePress(int x, int y)
 {
-    printf("x %d y %d\n", x, y);
     auto clicked = rg::sprite::pointcollide({x, y}, &card_list, false);
     if (!clicked.empty())
     {
         auto *primary_card = dynamic_cast<Card *>(clicked.back());
         auto pile_index = GetPileForCard(primary_card);
-        printf("Pile %d\n", pile_index);
+
+        if (pile_index == BOTTOM_FACE_DOWN_PILE)
+        {
+            for (int i = 0; i < FLIP_CARDS; ++i)
+            {
+                if (piles[BOTTOM_FACE_DOWN_PILE].size() == 0)
+                {
+                    break;
+                }
+                auto *card = dynamic_cast<Card *>(piles[BOTTOM_FACE_DOWN_PILE].back());
+                card->face_up();
+                card->rect = pile_mat_list[BOTTOM_FACE_UP_PILE];
+                card->rect.x += MAT_OFFSET;
+                piles[BOTTOM_FACE_DOWN_PILE].remove(card);
+                piles[BOTTOM_FACE_UP_PILE].add(card);
+                PullToTop(card);
+            }
+        }
     }
 }
 
