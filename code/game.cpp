@@ -192,6 +192,25 @@ void Game::OnMousePress(int x, int y)
             }
         }
     }
+    else
+    {
+        if (rl::CheckCollisionPointRec(
+                {(float) x, (float) y}, pile_mat_list[BOTTOM_FACE_DOWN_PILE].rectangle))
+        {
+            auto tmp_list = piles[BOTTOM_FACE_UP_PILE].Sprites();
+            std::ranges::reverse_view rev{tmp_list};
+            for (auto *card_sprite: rev)
+            {
+                auto *card = dynamic_cast<Card *>(card_sprite);
+                card->face_down();
+                piles[BOTTOM_FACE_UP_PILE].remove(card);
+                piles[BOTTOM_FACE_DOWN_PILE].add(card);
+                card->rect = pile_mat_list[BOTTOM_FACE_DOWN_PILE];
+                card->rect.x += MAT_OFFSET;
+                PullToTop(card);
+            }
+        }
+    }
 }
 
 void Game::OnMouseRelease()
