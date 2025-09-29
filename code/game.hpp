@@ -9,11 +9,12 @@
 #define CARD_WIDTH 140
 #define CARD_HEIGHT 190
 #define MAT_PERCENT_OVERSIZE 1.25
-#define MAT_HEIGHT CARD_HEIGHT * MAT_PERCENT_OVERSIZE
-#define MAT_WIDTH CARD_WIDTH * MAT_PERCENT_OVERSIZE
+#define MAT_HEIGHT (CARD_HEIGHT * MAT_PERCENT_OVERSIZE)
+#define MAT_WIDTH (CARD_WIDTH * MAT_PERCENT_OVERSIZE)
+#define MAT_OFFSET (MAT_WIDTH * 0.1)
 #define VERTICAL_MARGIN_PERCENT 0.1f
 #define HORIZONTAL_MARGIN_PERCENT 0.1f
-#define BOTTOM_Y SCREEN_HEIGHT + CARD_HEIGHT
+#define BOTTOM_Y (SCREEN_HEIGHT + CARD_HEIGHT)
 #define START_X (MAT_WIDTH * HORIZONTAL_MARGIN_PERCENT)
 #define TOP_Y MAT_HEIGHT * VERTICAL_MARGIN_PERCENT
 #define MIDDLE_Y (TOP_Y + MAT_HEIGHT + MAT_HEIGHT * VERTICAL_MARGIN_PERCENT)
@@ -50,7 +51,7 @@ private:
 
     void LoadCards();
     void Reset();
-    void PullToTop(Card *card);
+    void PullToTop(rg::sprite::Sprite *card);
 
     rg::Surface *screen{};
     rg::Surface display{};
@@ -59,6 +60,7 @@ private:
 
     rg::Surface *face_down{};
     std::vector<Card> cards{};
+    // holds the drawing order (all cards should be here)
     rg::sprite::OrderedUpdates card_list{};
     rg::sprite::OrderedUpdates held_cards{};
     std::vector<rg::Rect> held_cards_original_pos{};

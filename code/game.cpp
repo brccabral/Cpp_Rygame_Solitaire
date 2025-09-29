@@ -71,31 +71,53 @@ void Game::Reset()
     held_cards_original_pos.clear();
     piles.clear();
 
+    // resets drawing order
+    card_list.empty();
     for (auto &card: cards)
     {
-        card.rect = {START_X, BOTTOM_Y, CARD_WIDTH, CARD_HEIGHT};
+        card.rect = {START_X + MAT_OFFSET, BOTTOM_Y, CARD_WIDTH, CARD_HEIGHT};
         card_list.add(&card);
     }
 
+    // shuffles the deck
     std::ranges::shuffle(cards, *rg::math::get_rng());
 
+    // put all cards in dealing pile
     for (auto &card: cards)
     {
         piles[BOTTOM_FACE_DOWN_PILE].add(&card);
     }
 
+    // distribute cards in playing piles
     for (int pile_no = PLAY_PILE_1; pile_no < PLAY_PILE_7 + 1; ++pile_no)
     {
         for (int j = 0; j < pile_no - PLAY_PILE_1 + 1; ++j)
         {
+            // remove from dealing pile
             auto *card = piles[BOTTOM_FACE_DOWN_PILE].pop();
+            // add to current pile
             piles[pile_no].add(card);
+            // set drawing position
             card->rect = pile_mat_list[pile_no];
+            card->rect.x += MAT_OFFSET;
+            // put it in the top of drawing group
+            PullToTop(card);
         }
     }
+
+    // show card faces on top card of each playing pile
+    for (int pile_no = PLAY_PILE_1; pile_no < PLAY_PILE_7 + 1; ++pile_no)
+    {
+        auto *card_sprite = piles[pile_no].back();
+        auto *card = dynamic_cast<Card *>(card_sprite);
+        card->rect.y += CARD_VERTICAL_OFFSET;
+        card->face_up();
+
+    }
+
 }
 
-void Game::PullToTop(Card *card)
+void Game::PullToTop(rg::sprite::Sprite *card)
 {
     card_list.remove(card);
     card_list.add(card);
