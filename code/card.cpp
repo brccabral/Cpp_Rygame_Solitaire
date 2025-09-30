@@ -8,6 +8,7 @@ Card::Card(const std::string &suit, const std::string &value, rg::Surface *face_
     filename = "resources/cards/card" + suit + value + ".png";
     face_up_surf = &ResourceManager::GetInstance().GetSurface(filename);
     image = face_down_surf;
+    rect = image->GetRect();
 }
 
 void Card::face_up()

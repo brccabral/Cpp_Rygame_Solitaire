@@ -94,11 +94,16 @@ void Game::Reset()
     }
     piles.clear();
 
+    auto r = pile_mat_list[BOTTOM_FACE_DOWN_PILE];
+    auto c = r.center();
+    printf("r x %.2f y %.2f w %.2f h %.2f\n", r.x, r.y, r.width, r.height);
+    printf("c x %.2f y %.2f\n", c.x, c.y);
+
     // resets drawing order
     card_list.empty();
     for (auto &card: cards)
     {
-        card.rect = {START_X + MAT_OFFSET, BOTTOM_Y, CARD_WIDTH, CARD_HEIGHT};
+        card.rect.center(pile_mat_list[BOTTOM_FACE_DOWN_PILE].center());
         card_list.add(&card);
         card.face_down();
     }
@@ -122,8 +127,7 @@ void Game::Reset()
             // add to current pile
             piles[pile_no].add(card);
             // set drawing position
-            card->rect = pile_mat_list[pile_no];
-            card->rect.x += MAT_OFFSET;
+            card->rect.center(pile_mat_list[pile_no].center());
             // put it in the top of drawing group
             PullToTop(card);
         }
@@ -134,7 +138,6 @@ void Game::Reset()
     {
         auto *card_sprite = piles[pile_no].back();
         auto *card = dynamic_cast<Card *>(card_sprite);
-        card->rect.y += CARD_VERTICAL_OFFSET;
         card->face_up();
     }
 
@@ -164,8 +167,7 @@ void Game::OnMousePress(int x, int y)
                 }
                 auto *card = dynamic_cast<Card *>(piles[BOTTOM_FACE_DOWN_PILE].back());
                 card->face_up();
-                card->rect = pile_mat_list[BOTTOM_FACE_UP_PILE];
-                card->rect.x += MAT_OFFSET;
+                card->rect.center(pile_mat_list[BOTTOM_FACE_UP_PILE].center());
                 piles[BOTTOM_FACE_DOWN_PILE].remove(card);
                 piles[BOTTOM_FACE_UP_PILE].add(card);
                 PullToTop(card);
@@ -205,8 +207,7 @@ void Game::OnMousePress(int x, int y)
                 card->face_down();
                 piles[BOTTOM_FACE_UP_PILE].remove(card);
                 piles[BOTTOM_FACE_DOWN_PILE].add(card);
-                card->rect = pile_mat_list[BOTTOM_FACE_DOWN_PILE];
-                card->rect.x += MAT_OFFSET;
+                card->rect.center(pile_mat_list[BOTTOM_FACE_DOWN_PILE].center());
                 PullToTop(card);
             }
         }
