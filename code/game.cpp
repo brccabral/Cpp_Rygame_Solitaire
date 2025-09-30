@@ -173,7 +173,7 @@ void Game::OnMousePress(int x, int y)
                 PullToTop(card);
             }
         }
-        else if (piles[pile_index].size() == 1 &&
+        else if (piles[pile_index].back() == primary_card &&
                  !primary_card->isFaceUp)
         {
             primary_card->face_up();
