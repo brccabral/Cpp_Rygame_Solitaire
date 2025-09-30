@@ -219,9 +219,42 @@ void Game::OnMouseRelease()
     {
         return;
     }
-    for (int h = 0; h < held_cards.size(); ++h)
+
+    bool reset_position = true;
+
+    auto *held_card = held_cards.front();
+    const auto collided = rg::sprite::spritecollide(held_card, &card_list, false);
+    // will always collide with self
+    if (collided.size() > 1)
     {
-        held_cards[h]->rect = held_cards_original_pos[h];
+        auto collided_index = rg::index(collided, dynamic_cast<rg::sprite::Sprite *>(held_card));
+        auto *target = dynamic_cast<Card *>(collided[collided_index - 1]);
+        auto pile_index = GetPileForCard(target);
+        if (pile_index >= PLAY_PILE_1 && pile_index <= PLAY_PILE_7)
+        {
+            if (held_card->isOtherColor(target) &&
+                held_card->faceValue() == target->faceValue() - 1)
+            {
+                reset_position = false;
+
+                auto target_rect = target->rect;
+                for (auto *card: held_cards)
+                {
+                    MoveCardToPile(card, pile_index);
+                    card->rect = target_rect;
+                    card->rect.y += CARD_VERTICAL_OFFSET;
+                    target_rect = card->rect;
+                }
+            }
+        }
+    }
+
+    if (reset_position)
+    {
+        for (int h = 0; h < held_cards.size(); ++h)
+        {
+            held_cards[h]->rect = held_cards_original_pos[h];
+        }
     }
     held_cards.clear();
     held_cards_original_pos.clear();
@@ -246,5 +279,19 @@ PileIndex Game::GetPileForCard(Card *card)
         }
     }
     return -1;
+}
+
+void Game::MoveCardToPile(Card *card, const PileIndex pile_index)
+{
+    RemoveCardFromAnyPile(card);
+    piles[pile_index].add(card);
+}
+
+void Game::RemoveCardFromAnyPile(Card *card)
+{
+    for (auto &pile: piles | std::views::values)
+    {
+        pile.remove(card);
+    }
 }
 

@@ -57,6 +57,8 @@ private:
     void OnMouseRelease();
     void OnMouseMotion(float dx, float dy) const;
     PileIndex GetPileForCard(Card *);
+    void MoveCardToPile(Card *card, PileIndex pile_index);
+    void RemoveCardFromAnyPile(Card *card);
 
     rg::Surface *screen{};
     rg::Surface display{};

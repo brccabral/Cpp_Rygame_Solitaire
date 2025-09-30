@@ -9,6 +9,10 @@ public:
     Card(const std::string &suit, const std::string &value, rg::Surface *face_down);
     void face_up();
     void face_down();
+    bool isRed() const;
+    bool isBlack() const;
+    int faceValue() const;
+    bool isOtherColor(const Card *other) const;
     std::string suit{};
     std::string value{};
     bool isFaceUp{};
