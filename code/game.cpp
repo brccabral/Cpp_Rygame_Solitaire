@@ -256,12 +256,20 @@ void Game::OnMouseRelease()
             }
         }
     }
-
-    if (reset_position)
+    else if (auto mat_index = held_card->rect.collidelist(pile_mat_list);
+        mat_index > BOTTOM_FACE_UP_PILE)
     {
-        for (int h = 0; h < held_cards.size(); ++h)
+        if (mat_index >= TOP_PILE_1
+            && mat_index <= TOP_PILE_4
+            && held_card->faceValue() == 1
+            && piles[mat_index].size() == 0
+        )
         {
             held_cards[h]->rect = held_cards_original_pos[h];
+            MoveCardToPile(held_card, mat_index);
+            held_card->rect.center(pile_mat_list[mat_index].center());
+            goto clear;
+        }
         }
     }
     for (int h = 0; h < held_cards.size(); ++h)
