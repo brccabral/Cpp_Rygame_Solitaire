@@ -94,11 +94,6 @@ void Game::Reset()
     }
     piles.clear();
 
-    auto r = pile_mat_list[BOTTOM_FACE_DOWN_PILE];
-    auto c = r.center();
-    printf("r x %.2f y %.2f w %.2f h %.2f\n", r.x, r.y, r.width, r.height);
-    printf("c x %.2f y %.2f\n", c.x, c.y);
-
     // resets drawing order
     card_list.empty();
     for (auto &card: cards)
@@ -221,30 +216,31 @@ void Game::OnMouseRelease()
         return;
     }
 
-    bool reset_position = true;
-
     auto *held_card = held_cards.front();
     const auto collided = rg::sprite::spritecollide(held_card, &card_list, false);
     // will always collide with self
-    if (collided.size() > 1)
+    auto collided_index = rg::index(collided, dynamic_cast<rg::sprite::Sprite *>(held_card));
+    if (collided_index > 0)
     {
-        auto collided_index = rg::index(collided, dynamic_cast<rg::sprite::Sprite *>(held_card));
         auto *target = dynamic_cast<Card *>(collided[collided_index - 1]);
-        auto pile_index = GetPileForCard(target);
-        if (pile_index >= PLAY_PILE_1 && pile_index <= PLAY_PILE_7)
+        if (target->isFaceUp)
         {
-            if (held_card->isOtherColor(target) &&
-                held_card->faceValue() == target->faceValue() - 1)
+            auto pile_index = GetPileForCard(target);
+            if (pile_index >= PLAY_PILE_1 && pile_index <= PLAY_PILE_7)
             {
-                reset_position = false;
-
-                auto target_rect = target->rect;
-                for (auto *card: held_cards)
+                if (held_card->isOtherColor(target)
+                    && held_card->faceValue() == target->faceValue() - 1
+                )
                 {
-                    MoveCardToPile(card, pile_index);
-                    card->rect = target_rect;
-                    card->rect.y += CARD_VERTICAL_OFFSET;
-                    target_rect = card->rect;
+                    auto target_rect = target->rect;
+                    for (auto *card: held_cards)
+                    {
+                        MoveCardToPile(card, pile_index);
+                        card->rect = target_rect;
+                        card->rect.y += CARD_VERTICAL_OFFSET;
+                        target_rect = card->rect;
+                    }
+                    goto clear;
                 }
             }
         }
@@ -257,6 +253,11 @@ void Game::OnMouseRelease()
             held_cards[h]->rect = held_cards_original_pos[h];
         }
     }
+    for (int h = 0; h < held_cards.size(); ++h)
+    {
+        held_cards[h]->rect = held_cards_original_pos[h];
+    }
+clear:
     held_cards.clear();
     held_cards_original_pos.clear();
 }
