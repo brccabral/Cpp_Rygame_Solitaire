@@ -265,11 +265,28 @@ void Game::OnMouseRelease()
             && piles[mat_index].size() == 0
         )
         {
-            held_cards[h]->rect = held_cards_original_pos[h];
             MoveCardToPile(held_card, mat_index);
             held_card->rect.center(pile_mat_list[mat_index].center());
             goto clear;
         }
+        if (mat_index >= PLAY_PILE_1
+            && mat_index <= PLAY_PILE_7
+            && held_card->faceValue() == 13
+            && piles[mat_index].size() == 0
+        )
+        {
+            auto target_rect = pile_mat_list[mat_index];
+            for (auto *card: held_cards)
+            {
+                MoveCardToPile(card, mat_index);
+                card->rect.center(target_rect.center());
+                if (card != held_card)
+                {
+                    card->rect.y += CARD_VERTICAL_OFFSET;
+                }
+                target_rect = card->rect;
+            }
+            goto clear;
         }
     }
     for (int h = 0; h < held_cards.size(); ++h)
