@@ -243,6 +243,17 @@ void Game::OnMouseRelease()
                     goto clear;
                 }
             }
+            else if (pile_index >= TOP_PILE_1 && pile_index <= TOP_PILE_4)
+            {
+                if (held_card->suit == target->suit
+                    && held_card->faceValue() - 1 == target->faceValue()
+                )
+                {
+                    MoveCardToPile(held_card, pile_index);
+                    held_card->rect = target->rect;
+                    goto clear;
+                }
+            }
         }
     }
 
