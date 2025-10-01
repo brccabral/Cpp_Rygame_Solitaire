@@ -146,11 +146,11 @@ void Game::PullToTop(rg::sprite::Sprite *card)
 
 void Game::OnMousePress(int x, int y)
 {
-    auto clicked = rg::sprite::pointcollide({x, y}, &card_list, false);
+    const auto clicked = rg::sprite::pointcollide({x, y}, &card_list, false);
     if (!clicked.empty())
     {
         auto *primary_card = dynamic_cast<Card *>(clicked.back());
-        auto pile_index = GetPileForCard(primary_card);
+        const auto pile_index = GetPileForCard(primary_card);
 
         if (pile_index == BOTTOM_FACE_DOWN_PILE)
         {
@@ -179,7 +179,7 @@ void Game::OnMousePress(int x, int y)
             held_cards_original_pos.emplace_back(primary_card->rect);
             PullToTop(primary_card);
 
-            auto card_index = piles[pile_index].index(primary_card);
+            const auto card_index = piles[pile_index].index(primary_card);
             for (int i = card_index + 1; i < piles[pile_index].size(); ++i)
             {
                 auto *card = dynamic_cast<Card *>(piles[pile_index][i]);
@@ -195,7 +195,7 @@ void Game::OnMousePress(int x, int y)
                 {(float) x, (float) y}, pile_mat_list[BOTTOM_FACE_DOWN_PILE].rectangle))
         {
             auto tmp_list = piles[BOTTOM_FACE_UP_PILE].Sprites();
-            std::ranges::reverse_view rev{tmp_list};
+            const std::ranges::reverse_view rev{tmp_list};
             for (auto *card_sprite: rev)
             {
                 auto *card = dynamic_cast<Card *>(card_sprite);
@@ -219,13 +219,13 @@ void Game::OnMouseRelease()
     auto *held_card = held_cards.front();
     const auto collided = rg::sprite::spritecollide(held_card, &card_list, false);
     // will always collide with self
-    auto collided_index = rg::index(collided, dynamic_cast<rg::sprite::Sprite *>(held_card));
+    const auto collided_index = rg::index(collided, dynamic_cast<rg::sprite::Sprite *>(held_card));
     if (collided_index > 0)
     {
         auto *target = dynamic_cast<Card *>(collided[collided_index - 1]);
         if (target->isFaceUp)
         {
-            auto pile_index = GetPileForCard(target);
+            const auto pile_index = GetPileForCard(target);
             if (pile_index >= PLAY_PILE_1 && pile_index <= PLAY_PILE_7)
             {
                 if (held_card->isOtherColor(target)
@@ -256,7 +256,7 @@ void Game::OnMouseRelease()
             }
         }
     }
-    else if (auto mat_index = held_card->rect.collidelist(pile_mat_list);
+    else if (const auto mat_index = held_card->rect.collidelist(pile_mat_list);
         mat_index > BOTTOM_FACE_UP_PILE)
     {
         if (mat_index >= TOP_PILE_1
