@@ -51,7 +51,7 @@ void Game::run()
 
         card_list.Draw(&display);
 
-        screen->Blit(&display, rg::math::Vector2{}, rl::BLEND_ALPHA, CARD_SCALE);
+        screen->Blit(&display, rg::math::Vector2<float>{}, rl::BLEND_ALPHA, CARD_SCALE);
         rg::display::Update();
     }
 }
@@ -144,9 +144,10 @@ void Game::PullToTop(rg::sprite::Sprite *card)
     card_list.add(card);
 }
 
-void Game::OnMousePress(int x, int y)
+void Game::OnMousePress(const int x, const int y)
 {
-    const auto clicked = rg::sprite::pointcollide({x, y}, &card_list, false);
+    const auto clicked = rg::sprite::pointcollide(
+            {static_cast<float>(x), static_cast<float>(y)}, &card_list, false);
     if (!clicked.empty())
     {
         auto *primary_card = dynamic_cast<Card *>(clicked.back());
