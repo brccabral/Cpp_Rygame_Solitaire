@@ -71,8 +71,8 @@ void Game::LoadCards()
         }
     }
 
-    pile_mat_list.emplace_back(START_X, BOTTOM_Y, MAT_WIDTH, MAT_HEIGHT);
-    pile_mat_list.emplace_back(START_X + X_SPACING, BOTTOM_Y, MAT_WIDTH, MAT_HEIGHT);
+    pile_mat_list.emplace_back(START_X, static_cast<float>(BOTTOM_Y), MAT_WIDTH, MAT_HEIGHT);
+    pile_mat_list.emplace_back(START_X + X_SPACING, static_cast<float>(BOTTOM_Y), MAT_WIDTH, MAT_HEIGHT);
     for (int i = 0; i < 7; ++i)
     {
         pile_mat_list.emplace_back(START_X + i * X_SPACING, MIDDLE_Y, MAT_WIDTH, MAT_HEIGHT);
@@ -193,7 +193,7 @@ void Game::OnMousePress(const int x, const int y)
     else
     {
         if (rl::CheckCollisionPointRec(
-                {(float) x, (float) y}, pile_mat_list[BOTTOM_FACE_DOWN_PILE].rectangle))
+                {(float) x, (float) y}, pile_mat_list[BOTTOM_FACE_DOWN_PILE].rectangle()))
         {
             auto tmp_list = piles[BOTTOM_FACE_UP_PILE].Sprites();
             const std::ranges::reverse_view rev{tmp_list};
