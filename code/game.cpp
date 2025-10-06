@@ -4,7 +4,6 @@
 
 Game::Game()
 {
-    rg::Init();
     screen = &rg::display::SetMode(1024, 768);
     display = rg::Surface(1706, 1280);
     rg::display::SetCaption("Solitaire");
@@ -15,8 +14,6 @@ Game::Game()
 Game::~Game()
 {
     ResourceManager::Destroy();
-    display.~Surface();
-    rg::Quit();
 }
 
 void Game::run()
@@ -72,7 +69,8 @@ void Game::LoadCards()
     }
 
     pile_mat_list.emplace_back(START_X, static_cast<float>(BOTTOM_Y), MAT_WIDTH, MAT_HEIGHT);
-    pile_mat_list.emplace_back(START_X + X_SPACING, static_cast<float>(BOTTOM_Y), MAT_WIDTH, MAT_HEIGHT);
+    pile_mat_list.emplace_back(
+            START_X + X_SPACING, static_cast<float>(BOTTOM_Y), MAT_WIDTH, MAT_HEIGHT);
     for (int i = 0; i < 7; ++i)
     {
         pile_mat_list.emplace_back(START_X + i * X_SPACING, MIDDLE_Y, MAT_WIDTH, MAT_HEIGHT);

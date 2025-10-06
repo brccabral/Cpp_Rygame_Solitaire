@@ -2,7 +2,11 @@
 
 int main()
 {
-    Game game;
-    game.run();
+    rg::Init();
+    {
+        Game game;
+        game.run();
+    }
+    rg::Quit();
     return 0;
 }
