@@ -49,8 +49,8 @@ void Game::run()
         card_list.Draw(&display);
 
         screen->Blit(
-                &display, rg::math::Vector2<float>{}, display.atlas_rect, rl::BLEND_ALPHA,
-                CARD_SCALE);
+                &display, rg::math::Vector2<float>{}, {}, rl::BLEND_ALPHA,
+                screen->GetTexture().width, screen->GetTexture().height);
         rg::display::Update();
     }
 }
